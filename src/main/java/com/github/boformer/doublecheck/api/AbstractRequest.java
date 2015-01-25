@@ -6,12 +6,12 @@ import org.spongepowered.api.util.command.CommandSource;
 
 public abstract class AbstractRequest implements Request
 {
-	private final CommandSource receipient;
+	private final CommandSource recipient;
 	private final Date expirationDate;
 	
-	public AbstractRequest(CommandSource receipient, int expirationTime)
+	public AbstractRequest(CommandSource recipient, int expirationTime)
 	{
-		this.receipient = receipient;
+		this.recipient = recipient;
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.SECOND, expirationTime);
@@ -20,9 +20,9 @@ public abstract class AbstractRequest implements Request
 	}
 
 	@Override
-	public CommandSource getReceipient()
+	public CommandSource getRecipient()
 	{
-		return receipient;
+		return recipient;
 	}
 
 	@Override

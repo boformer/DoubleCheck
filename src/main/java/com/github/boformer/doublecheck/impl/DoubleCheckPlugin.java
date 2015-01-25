@@ -50,10 +50,10 @@ public class DoubleCheckPlugin implements ConfirmationService
 	@Override
 	public void send(Request question)
 	{
-		activeRequests.put(question.getReceipient(), question);
+		activeRequests.put(question.getRecipient(), question);
 		
-		question.getReceipient().sendMessage(question.getMessages());
-		question.getReceipient().sendMessage(commandMessage);
+		question.getRecipient().sendMessage(question.getMessages());
+		question.getRecipient().sendMessage(commandMessage);
 	}
 
 	@Override

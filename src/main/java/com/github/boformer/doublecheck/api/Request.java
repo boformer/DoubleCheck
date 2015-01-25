@@ -7,7 +7,7 @@ import org.spongepowered.api.util.command.CommandSource;
 
 public interface Request 
 {
-	CommandSource getReceipient();
+	CommandSource getRecipient();
 	List<Message> getMessages();
 	
 	boolean isExpired();
