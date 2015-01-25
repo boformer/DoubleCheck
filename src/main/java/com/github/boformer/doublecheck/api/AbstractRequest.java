@@ -4,12 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 import org.spongepowered.api.util.command.CommandSource;
 
-public abstract class AbstracRequest implements Request
+public abstract class AbstractRequest implements Request
 {
 	private final CommandSource receipient;
 	private final Date expirationDate;
 	
-	public AbstracRequest(CommandSource receipient, int expirationTime)
+	public AbstractRequest(CommandSource receipient, int expirationTime)
 	{
 		this.receipient = receipient;
 		
