@@ -1,4 +1,4 @@
-package com.github.boformer.answerme.impl;
+package com.github.boformer.doublecheck.impl;
 
 import org.apache.commons.collections4.map.LRUMap;
 import org.slf4j.Logger;
@@ -11,12 +11,12 @@ import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.event.Subscribe;
 
-import com.github.boformer.answerme.api.Question;
-import com.github.boformer.answerme.api.QuestionService;
+import com.github.boformer.doublecheck.api.Question;
+import com.github.boformer.doublecheck.api.QuestionService;
 import com.google.common.base.Optional;
 
-@Plugin(id = "AnswerMe", name = "AnswerMe", version = "0.1.0")
-public class AnswerMePlugin implements QuestionService
+@Plugin(id = "DoubleCheck", name = "DoubleCheck", version = "0.1.0")
+public class DoubleCheckPlugin implements QuestionService
 {
 	//TODO injection
 	private Game game;

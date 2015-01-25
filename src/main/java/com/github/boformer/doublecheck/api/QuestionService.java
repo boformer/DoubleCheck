@@ -1,4 +1,4 @@
-package com.github.boformer.answerme.api;
+package com.github.boformer.doublecheck.api;
 
 import org.spongepowered.api.util.command.CommandSource;
 

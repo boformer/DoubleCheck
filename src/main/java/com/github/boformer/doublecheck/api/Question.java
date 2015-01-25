@@ -1,4 +1,4 @@
-package com.github.boformer.answerme.api;
+package com.github.boformer.doublecheck.api;
 
 import java.util.List;
 
@@ -12,6 +12,6 @@ public interface Question
 	
 	boolean isExpired();
 	
-	void onYesAnswer();
-	void onNoAnswer();
+	void onConfirmation();
+	void onDenial();
 }
