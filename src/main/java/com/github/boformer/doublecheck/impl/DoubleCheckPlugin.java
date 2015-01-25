@@ -11,26 +11,26 @@ import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.event.Subscribe;
 
-import com.github.boformer.doublecheck.api.Question;
-import com.github.boformer.doublecheck.api.QuestionService;
+import com.github.boformer.doublecheck.api.Request;
+import com.github.boformer.doublecheck.api.ConfirmationService;
 import com.google.common.base.Optional;
 
 @Plugin(id = "DoubleCheck", name = "DoubleCheck", version = "0.1.0")
-public class DoubleCheckPlugin implements QuestionService
+public class DoubleCheckPlugin implements ConfirmationService
 {
 	//TODO injection
 	private Game game;
 	private Logger logger;
 	
-	private LRUMap<CommandSource, Question> activeQuestions;
-	private Message answerCmdMessage;
+	private LRUMap<CommandSource, Request> activeRequests;
+	private Message commandMessage;
 	
 	@Subscribe
 	public void onInit(PreInitializationEvent event)
 	{
 		try
 		{
-			game.getServiceManager().setProvider(this, QuestionService.class, this);
+			game.getServiceManager().setProvider(this, ConfirmationService.class, this);
 		}
 		catch (ProviderExistsException e)
 		{
@@ -38,24 +38,33 @@ public class DoubleCheckPlugin implements QuestionService
 			return;
 		}
 		
+		game.getCommandDispatcher().register(this, new ConfirmCommand(this), "ok", "yes"); //TODO configurable aliases
+		game.getCommandDispatcher().register(this, new DenyCommand(this), "cancel", "no");
+		
 		//TODO initialize config, copy defaults
 		
-		this.activeQuestions = new LRUMap<>(100); //TODO configurable cache size 
-		this.answerCmdMessage =  Messages.of("Confirm with /yes or cancel with /no"); //TODO configurable message 
+		this.activeRequests = new LRUMap<>(100); //TODO configurable cache size 
+		this.commandMessage =  Messages.of("Please /confirm or /deny the action."); //TODO configurable message 
 	}
 
 	@Override
-	public void ask(Question question)
+	public void send(Request question)
 	{
-		activeQuestions.put(question.getReceipient(), question);
+		activeRequests.put(question.getReceipient(), question);
 		
 		question.getReceipient().sendMessage(question.getMessages());
-		question.getReceipient().sendMessage(answerCmdMessage);
+		question.getReceipient().sendMessage(commandMessage);
 	}
 
 	@Override
-	public Optional<Question> getActiveQuestion(CommandSource receipient)
+	public Optional<Request> getActiveRequest(CommandSource receipient)
 	{
-		return Optional.fromNullable(activeQuestions.get(receipient));
+		return Optional.fromNullable(activeRequests.get(receipient));
+	}
+	
+	@Override
+	public void removeActiveRequest(CommandSource receipient)
+	{
+		activeRequests.remove(receipient);
 	}
 }

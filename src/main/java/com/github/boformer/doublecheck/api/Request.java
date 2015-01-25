@@ -5,13 +5,13 @@ import java.util.List;
 import org.spongepowered.api.text.message.Message;
 import org.spongepowered.api.util.command.CommandSource;
 
-public interface Question 
+public interface Request 
 {
 	CommandSource getReceipient();
 	List<Message> getMessages();
 	
 	boolean isExpired();
 	
-	void onConfirmation();
-	void onDenial();
+	void confirm();
+	void deny();
 }

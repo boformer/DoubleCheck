@@ -1,2 +1,2 @@
 # DoubleCheck
-Unified Command Confirmation for Sponge Minecraft Multiplayer Servers
+Unified Action Confirmation for Sponge Minecraft Multiplayer Servers
