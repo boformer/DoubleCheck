@@ -34,7 +34,7 @@ public class DoubleCheckPlugin implements ConfirmationService
 		}
 		catch (ProviderExistsException e)
 		{
-			logger.warn("Question Service was already registered by another plugin :(");
+			logger.warn("Confirmation Service was already registered by another plugin :(");
 			return;
 		}
 		
