@@ -1,5 +1,6 @@
 package com.github.boformer.doublecheck.impl;
 
+import com.google.inject.Inject;
 import org.apache.commons.collections4.map.LRUMap;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -18,8 +19,10 @@ import com.google.common.base.Optional;
 @Plugin(id = "DoubleCheck", name = "DoubleCheck", version = "0.1.0")
 public class DoubleCheckPlugin implements ConfirmationService
 {
-	//TODO injection
+	@Inject
 	private Game game;
+
+    @Inject
 	private Logger logger;
 	
 	private LRUMap<CommandSource, Request> activeRequests;
@@ -38,8 +41,8 @@ public class DoubleCheckPlugin implements ConfirmationService
 			return;
 		}
 		
-		game.getCommandDispatcher().register(this, new ConfirmCommand(this), "ok", "yes"); //TODO configurable aliases
-		game.getCommandDispatcher().register(this, new DenyCommand(this), "cancel", "no");
+		game.getCommandDispatcher().register(this, new ConfirmCommand(this), "confirm", "ok", "yes"); //TODO configurable aliases
+		game.getCommandDispatcher().register(this, new DenyCommand(this), "deny", "cancel", "no");
 		
 		//TODO initialize config, copy defaults
 		
