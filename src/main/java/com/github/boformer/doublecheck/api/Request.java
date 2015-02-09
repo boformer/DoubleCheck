@@ -24,18 +24,46 @@
  */
 package com.github.boformer.doublecheck.api;
 
-import java.util.List;
-
 import org.spongepowered.api.text.message.Message;
 import org.spongepowered.api.util.command.CommandSource;
 
-public interface Request 
+/**
+ * A confirmation request that can be passed to a {@link ConfirmationService} to send it to the
+ * recipient.
+ * 
+ * <p>Plugins can create their own request classes which implement this interface or
+ * alternatively extend the {@link AbstractRequest} class.</p>
+ */
+public interface Request
 {
+	/**
+	 * Gets the recipient of the request.
+	 * 
+	 * @return The receipient
+	 */
 	CommandSource getRecipient();
-	List<Message> getMessages();
-	
+
+	/**
+	 * Gets the messages that will be sent to the recipient when the request is sent.
+	 * 
+	 * @return An array of messages
+	 */
+	Message[] getMessages();
+
+	/**
+	 * Indicates whether the request is expired.
+	 * 
+	 * @return true if the request is expired
+	 */
 	boolean isExpired();
-	
+
+	/**
+	 * The method that will be executed when the player confirms the request.
+	 */
 	void confirm();
+
+	/**
+	 * The method that will be executed when the player denies the request.
+	 */
 	void deny();
 }

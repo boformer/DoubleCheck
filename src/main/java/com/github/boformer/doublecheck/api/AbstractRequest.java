@@ -26,13 +26,25 @@ package com.github.boformer.doublecheck.api;
 
 import java.util.Calendar;
 import java.util.Date;
+
 import org.spongepowered.api.util.command.CommandSource;
 
+/**
+ * The default implementation of the {@link Request} interface.
+ * 
+ * <p>Plugins can create their own request classes by extending this class.</p>
+ */
 public abstract class AbstractRequest implements Request
 {
 	private final CommandSource recipient;
 	private final Date expirationDate;
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param recipient The recipient of the request (e.g. a player or the console)
+	 * @param expirationTime Number of seconds until the request expires
+	 */
 	public AbstractRequest(CommandSource recipient, int expirationTime)
 	{
 		this.recipient = recipient;
