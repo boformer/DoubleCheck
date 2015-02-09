@@ -36,7 +36,7 @@ import com.github.boformer.doublecheck.api.ConfirmationService;
 import com.github.boformer.doublecheck.api.Request;
 import com.google.common.base.Optional;
 
-public class ConfirmCommand implements CommandCallable
+class ConfirmCommand implements CommandCallable
 {
 	private final DoubleCheckConfirmationService confirmationService;
 	

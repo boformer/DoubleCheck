@@ -32,7 +32,7 @@ import com.github.boformer.doublecheck.api.ConfirmationService;
 import com.github.boformer.doublecheck.api.Request;
 import com.google.common.base.Optional;
 
-public class DoubleCheckConfirmationService implements ConfirmationService
+class DoubleCheckConfirmationService implements ConfirmationService
 {
 	private LRUMap<CommandSource, Request> activeRequests;
 	
