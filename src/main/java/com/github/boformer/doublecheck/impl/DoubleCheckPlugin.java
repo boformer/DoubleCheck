@@ -1,7 +1,7 @@
 /*
  * This file is part of DoubleCheck, licensed under the MIT License (MIT).
  *
- * Copyright (c) Felix Schmidt <http://github.com/boformer/DoubleCheck>
+ * Copyright (c) 2015 Felix Schmidt <http://homepage.rub.de/Felix.Schmidt-c2n/>
  * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,13 +24,19 @@
  */
 package com.github.boformer.doublecheck.impl;
 
+import java.io.File;
+
 import com.google.inject.Inject;
+
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+
 import org.apache.commons.collections4.map.LRUMap;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.ProviderExistsException;
+import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.text.message.Message;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
@@ -41,57 +47,42 @@ import com.github.boformer.doublecheck.api.ConfirmationService;
 import com.google.common.base.Optional;
 
 @Plugin(id = "DoubleCheck", name = "DoubleCheck", version = "0.1.0")
-public class DoubleCheckPlugin implements ConfirmationService
+public class DoubleCheckPlugin
 {
 	@Inject
 	private Game game;
 
     @Inject
 	private Logger logger;
+    
+    @Inject
+    @DefaultConfig(sharedRoot = true)
+    private ConfigurationLoader configManager;
+
+    @Inject
+    @DefaultConfig(sharedRoot = true)
+    private File defaultConfig;
 	
-	private LRUMap<CommandSource, Request> activeRequests;
-	private Message commandMessage;
+	private DoubleCheckConfirmationService confirmationService;
 	
 	@Subscribe
-	public void onInit(PreInitializationEvent event)
+	public void onPreInitialization(PreInitializationEvent event)
 	{
+		this.confirmationService = new DoubleCheckConfirmationService(game, this);
+		
 		try
 		{
-			game.getServiceManager().setProvider(this, ConfirmationService.class, this);
+			game.getServiceManager().setProvider(this, ConfirmationService.class, confirmationService);
 		}
 		catch (ProviderExistsException e)
 		{
 			logger.warn("Confirmation Service was already registered by another plugin :(");
+			
+			this.confirmationService = null;
 			return;
 		}
 		
-		game.getCommandDispatcher().register(this, new ConfirmCommand(this), "confirm", "ok", "yes"); //TODO configurable aliases
-		game.getCommandDispatcher().register(this, new DenyCommand(this), "deny", "cancel", "no");
-		
-		//TODO initialize config, copy defaults
-		
-		this.activeRequests = new LRUMap<>(100); //TODO configurable cache size 
-		this.commandMessage =  Messages.of("Please /confirm or /deny the action."); //TODO configurable message 
-	}
-
-	@Override
-	public void send(Request question)
-	{
-		activeRequests.put(question.getRecipient(), question);
-		
-		question.getRecipient().sendMessage(question.getMessages());
-		question.getRecipient().sendMessage(commandMessage);
-	}
-
-	@Override
-	public Optional<Request> getActiveRequest(CommandSource receipient)
-	{
-		return Optional.fromNullable(activeRequests.get(receipient));
-	}
-	
-	@Override
-	public void removeActiveRequest(CommandSource receipient)
-	{
-		activeRequests.remove(receipient);
+		game.getCommandDispatcher().register(this, new ConfirmCommand(confirmationService), "confirm", "ok", "yes"); //TODO configurable aliases
+		game.getCommandDispatcher().register(this, new DenyCommand(confirmationService), "deny", "cancel", "no");
 	}
 }

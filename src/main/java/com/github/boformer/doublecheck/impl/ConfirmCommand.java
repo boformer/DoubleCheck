@@ -1,7 +1,7 @@
 /*
  * This file is part of DoubleCheck, licensed under the MIT License (MIT).
  *
- * Copyright (c) Felix Schmidt <http://github.com/boformer/DoubleCheck>
+ * Copyright (c) 2015 Felix Schmidt <http://homepage.rub.de/Felix.Schmidt-c2n/>
  * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,16 +32,17 @@ import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
 
+import com.github.boformer.doublecheck.api.ConfirmationService;
 import com.github.boformer.doublecheck.api.Request;
 import com.google.common.base.Optional;
 
 public class ConfirmCommand implements CommandCallable
 {
-	private final DoubleCheckPlugin plugin;
+	private final DoubleCheckConfirmationService confirmationService;
 	
-	public ConfirmCommand(DoubleCheckPlugin plugin)
+	public ConfirmCommand(DoubleCheckConfirmationService confirmationService)
 	{
-		this.plugin = plugin;
+		this.confirmationService = confirmationService;
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class ConfirmCommand implements CommandCallable
 	{
 		if(!testPermission(source)) return false;
 		
-		Request request = plugin.getActiveRequest(source).orNull();
+		Request request = confirmationService.getActiveRequest(source).orNull();
 		
 		if(request == null) 
 		{
@@ -65,12 +66,12 @@ public class ConfirmCommand implements CommandCallable
 		else if(request.isExpired()) 
 		{
 			source.sendMessage(Messages.of("The confirmation request is expired.")); //TODO configurable message 
-			plugin.removeActiveRequest(source);
+			confirmationService.removeActiveRequest(source);
 			return true;
 		}
 		
 		request.confirm();
-		plugin.removeActiveRequest(source);
+		confirmationService.removeActiveRequest(source);
 		
 		return true;
 	}

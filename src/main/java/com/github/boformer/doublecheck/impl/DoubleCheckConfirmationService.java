@@ -22,17 +22,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.boformer.doublecheck.api;
+package com.github.boformer.doublecheck.impl;
 
+import org.apache.commons.collections4.map.LRUMap;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.util.command.CommandSource;
 
+import com.github.boformer.doublecheck.api.ConfirmationService;
+import com.github.boformer.doublecheck.api.Request;
 import com.google.common.base.Optional;
 
-public interface ConfirmationService
+public class DoubleCheckConfirmationService implements ConfirmationService
 {
-	void send(Request request);
+	private LRUMap<CommandSource, Request> activeRequests;
 	
-	Optional<Request> getActiveRequest(CommandSource receipient);
+	public DoubleCheckConfirmationService(Game game, Object plugin)
+	{
+		this.activeRequests = new LRUMap<>(100); //TODO configurable cache size 
+	}
 
-	void removeActiveRequest(CommandSource receipient);
+	@Override
+	public void send(Request question)
+	{
+		activeRequests.put(question.getRecipient(), question);
+		
+		question.getRecipient().sendMessage(question.getMessages());
+		question.getRecipient().sendMessage("Please /confirm or /deny the action."); //TODO configurable message 
+	}
+
+	@Override
+	public Optional<Request> getActiveRequest(CommandSource receipient)
+	{
+		return Optional.fromNullable(activeRequests.get(receipient));
+	}
+	
+	@Override
+	public void removeActiveRequest(CommandSource receipient)
+	{
+		activeRequests.remove(receipient);
+	}
 }

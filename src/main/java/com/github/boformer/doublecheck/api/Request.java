@@ -1,7 +1,7 @@
 /*
  * This file is part of DoubleCheck, licensed under the MIT License (MIT).
  *
- * Copyright (c) Felix Schmidt <http://github.com/boformer/DoubleCheck>
+ * Copyright (c) 2015 Felix Schmidt <http://homepage.rub.de/Felix.Schmidt-c2n/>
  * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
