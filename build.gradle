@@ -21,15 +21,16 @@ defaultTasks 'licenseFormat', 'build'
 // Basic project information
 group = 'com.github.boformer'
 archivesBaseName = 'doublecheck'
-version = '1.0-SNAPSHOT'
+version = '0.1.0-SNAPSHOT'
 
 // Extended project information
 ext.projectName = 'DoubleCheck'
 ext.inceptionYear = '2015'
 ext.packaging = 'jar'
-ext.url = 'http://github.com/boformer/DoubleCheck'
+ext.projectUrl = 'http://github.com/boformer/DoubleCheck'
 ext.description = 'DoubleCheck'
 ext.author = 'Felix Schmidt'
+ext.authorUrl = 'http://homepage.rub.de/Felix.Schmidt-c2n/'
 
 // Minimum version of Java required
 sourceCompatibility = '1.7'
@@ -45,7 +46,6 @@ repositories {
 }
 
 configurations {
-    deployerJars // maven stuff
     provided
     compile.extendsFrom provided
 }
@@ -66,7 +66,7 @@ processResources {
 license {
     ext.name = project.name
     ext.author = project.author
-    ext.url = project.url
+    ext.url = project.authorUrl
     ext.year = project.inceptionYear
     exclude "**/*.info"
     exclude "assets/**"
@@ -84,6 +84,37 @@ jar {
     from {
         (configurations.runtime - configurations.provided).collect {
             it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+task sourceJar(type: Jar) {
+	from sourceSets.main.java
+	from sourceSets.main.resources
+	classifier = "sources"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	from javadoc.destinationDir
+	classifier = "javadoc"
+}
+
+artifacts {
+    archives jar
+    archives sourceJar
+    archives javadocJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+			repository(url: mavenUrl)
+
+            pom {
+                groupId = project.group
+                version = project.version
+                artifactId = project.archivesBaseName
+            }
         }
     }
 }
