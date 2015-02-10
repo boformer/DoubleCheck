@@ -88,6 +88,10 @@ jar {
     }
 }
 
+javadoc {
+    options.overview = "src/main/java/overview.html"
+}
+
 task sourceJar(type: Jar) {
 	from sourceSets.main.java
 	from sourceSets.main.resources
