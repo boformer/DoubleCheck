@@ -38,9 +38,9 @@ import com.google.common.base.Optional;
 
 class ConfirmCommand implements CommandCallable
 {
-	private final DoubleCheckConfirmationService confirmationService;
+	private final DoubleCheckService confirmationService;
 	
-	public ConfirmCommand(DoubleCheckConfirmationService confirmationService)
+	public ConfirmCommand(DoubleCheckService confirmationService)
 	{
 		this.confirmationService = confirmationService;
 	}

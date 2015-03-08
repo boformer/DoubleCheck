@@ -42,6 +42,10 @@ repositories {
         name 'Sponge maven repo'
         url 'http://repo.spongepowered.org/maven'
     }
+    maven {
+		name 'sonatypeSnapshot'
+		url 'https://oss.sonatype.org/content/repositories/snapshots/'
+	}
     mavenCentral()
 }
 
@@ -53,6 +57,7 @@ configurations {
 // Project dependencies
 dependencies {
     provided 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
+    provided 'ninja.leaping.configurate:configurate-core:1.0-SNAPSHOT'
     compile 'org.apache.commons:commons-collections4:4.0'
 }
 

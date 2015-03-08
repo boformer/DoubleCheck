@@ -32,11 +32,11 @@ import com.github.boformer.doublecheck.api.ConfirmationService;
 import com.github.boformer.doublecheck.api.Request;
 import com.google.common.base.Optional;
 
-class DoubleCheckConfirmationService implements ConfirmationService
+class DoubleCheckService implements ConfirmationService
 {
 	private LRUMap<CommandSource, Request> activeRequests;
 	
-	public DoubleCheckConfirmationService(Game game, Object plugin)
+	public DoubleCheckService(Game game, Object plugin)
 	{
 		this.activeRequests = new LRUMap<>(100); //TODO configurable cache size 
 	}
@@ -46,7 +46,7 @@ class DoubleCheckConfirmationService implements ConfirmationService
 	{
 		activeRequests.put(question.getRecipient(), question);
 		
-		question.getRecipient().sendMessage(question.getMessages());
+		question.getRecipient().sendMessage(question.getMessage());
 		question.getRecipient().sendMessage("Please /confirm or /deny the action."); //TODO configurable message 
 	}
 

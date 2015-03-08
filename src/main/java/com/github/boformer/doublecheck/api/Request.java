@@ -44,11 +44,13 @@ public interface Request
 	CommandSource getRecipient();
 
 	/**
-	 * Gets the messages that will be sent to the recipient when the request is sent.
+	 * Gets the message that will be sent to the recipient when the request is sent.
 	 * 
-	 * @return An array of messages
+	 * <p>Supports multi-line messages with {@code \n}.</p>
+	 * 
+	 * @return A message
 	 */
-	Message[] getMessages();
+	Message getMessage();
 
 	/**
 	 * Indicates whether the request is expired.

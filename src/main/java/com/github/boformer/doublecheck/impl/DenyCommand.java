@@ -38,9 +38,9 @@ import com.google.common.base.Optional;
 
 class DenyCommand implements CommandCallable
 {
-	private final DoubleCheckConfirmationService confirmationService;
+	private final DoubleCheckService confirmationService;
 	
-	public DenyCommand(DoubleCheckConfirmationService confirmationService)
+	public DenyCommand(DoubleCheckService confirmationService)
 	{
 		this.confirmationService = confirmationService;
 	}

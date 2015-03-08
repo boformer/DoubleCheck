@@ -25,16 +25,9 @@
 package com.github.boformer.doublecheck.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
 import com.google.inject.Inject;
-
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import static ninja.leaping.configurate.loader.FileConfigurationLoader.UTF8_CHARSET;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -47,8 +40,6 @@ import org.spongepowered.api.util.event.Order;
 import org.spongepowered.api.util.event.Subscribe;
 
 import com.github.boformer.doublecheck.api.ConfirmationService;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 
 @Plugin(id = "DoubleCheck", name = "DoubleCheck", version = "0.1.0")
 public class DoubleCheckPlugin
@@ -61,19 +52,15 @@ public class DoubleCheckPlugin
 	
 	@Inject
 	@DefaultConfig(sharedRoot = true)
-	private ConfigurationLoader configLoader;
-
-	@Inject
-	@DefaultConfig(sharedRoot = true)
 	private File configFile;
 
-	private DoubleCheckConfirmationService confirmationService;
+	private DoubleCheckService confirmationService;
 
 
 	@Subscribe(order = Order.PRE)
 	public void onPreInitialization(PreInitializationEvent event)
 	{
-		this.confirmationService = new DoubleCheckConfirmationService(game, this);
+		this.confirmationService = new DoubleCheckService(game, this);
 
 		try
 		{
