@@ -32,7 +32,8 @@ import com.google.common.base.Optional;
  * The Service that can be used by other plugins to send confirmation requests to a player or the
  * console. 
  * 
- * <p>The provider of the service can be obtained with the static {@link DoubleCheck#initializeService(org.spongepowered.api.Game, Object)} method</p>
+ * <p>The provider of the service can be obtained with the static 
+ * {@link DoubleCheck#initializeService(org.spongepowered.api.Game, Object)} method.</p>
  */
 public interface ConfirmationService
 {

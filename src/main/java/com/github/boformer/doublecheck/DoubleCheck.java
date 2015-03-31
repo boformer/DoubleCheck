@@ -71,7 +71,8 @@ public class DoubleCheck
 	 * @param expirationTime The expiration time in seconds
 	 * @return The service
 	 */
-	public static ConfirmationService initializeService(Game game, Object plugin, Text requestMessage, String confirmAlias, String denyAlias, int expirationTime) 
+	public static ConfirmationService initializeService(Game game, Object plugin, Text requestMessage, String confirmAlias, 
+			String denyAlias, int expirationTime) 
 	{
 		checkNotNull(game);
 		checkNotNull(plugin);
