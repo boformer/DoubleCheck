@@ -31,17 +31,10 @@ repositories {
 		name 'Sponge maven repo'
 		url 'http://repo.spongepowered.org/maven'
 	}
-	mavenCentral()
-}
-
-configurations {
-	provided
-	compile.extendsFrom provided
 }
 
 dependencies {
-	provided 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
-    compile 'org.apache.commons:commons-collections4:4.0'
+	compile 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
 }
 
 license {
@@ -58,15 +51,6 @@ license {
 	strictCheck true
 	mapping {
 		java = 'SLASHSTAR_STYLE'
-	}
-}
-
-jar {
-	dependsOn configurations.runtime
-	from {
-		(configurations.runtime - configurations.provided).collect {
-			it.isDirectory() ? it : zipTree(it)
-		}
 	}
 }
 
