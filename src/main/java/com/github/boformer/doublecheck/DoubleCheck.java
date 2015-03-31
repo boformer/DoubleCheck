@@ -61,7 +61,7 @@ public class DoubleCheck
 	 * Initializes a new {@link ConfirmationService} with the specified parameters.
 	 * 
 	 * <p>Only use this if the default message and aliases are not suitable.
-	 * Otherwise, use the recommended method.</p>
+	 * Otherwise, use the recommended {@link DoubleCheck#initializeService(Game, Object)} method.</p>
 	 * 
 	 * @param game The game
 	 * @param plugin The plugin instance
