@@ -29,34 +29,36 @@ import org.spongepowered.api.util.command.CommandSource;
 import com.google.common.base.Optional;
 
 /**
- * The Service that can be used by other plugins to send confirmation requests to a player or the
- * console. 
- * 
- * <p>The provider of the service can be obtained with the static 
- * {@link DoubleCheck#initializeService(org.spongepowered.api.Game, Object)} method.</p>
+ * The Service that can be used by other plugins to send confirmation requests
+ * to a player or the console.
+ *
+ * <p>The provider of the service can be obtained with the static
+ * {@link DoubleCheck#initializeService(org.spongepowered.api.Game, Object)}
+ * method.</p>
  */
 public interface ConfirmationService
 {
-	/**
-	 * Sends a new request to the specified recipient.
-	 * 
-	 * @param recipient The recipient
-	 * @param request The request
-	 */
-	void send(CommandSource recipient, Request request);
-	
-	/**
-	 * Gets the active request of a recipient, if there is one that is not expired.
-	 * 
-	 * @param recipient The recipient
-	 * @return The request, if available
-	 */
-	Optional<Request> getActiveRequest(CommandSource recipient);
+    /**
+     * Sends a new request to the specified recipient.
+     * 
+     * @param recipient The recipient
+     * @param request The request
+     */
+    void send(CommandSource recipient, Request request);
 
-	/**
-	 * Removes the active request of a recipient.
-	 * 
-	 * @param recipient The recipient
-	 */
-	void removeActiveRequest(CommandSource recipient);
+    /**
+     * Gets the active request of a recipient, if there is one that is not
+     * expired.
+     * 
+     * @param recipient The recipient
+     * @return The request, if available
+     */
+    Optional<Request> getActiveRequest(CommandSource recipient);
+
+    /**
+     * Removes the active request of a recipient.
+     * 
+     * @param recipient The recipient
+     */
+    void removeActiveRequest(CommandSource recipient);
 }

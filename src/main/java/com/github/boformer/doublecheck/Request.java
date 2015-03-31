@@ -28,34 +28,35 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.command.CommandSource;
 
 /**
- * A confirmation request that can be passed to a {@link ConfirmationService} to send it to the
- * recipient.
- * 
- * <p>Plugins can create their own request classes which implement this interface or
- * alternatively extend the {@link AbstractRequest} class.</p>
+ * A confirmation request that can be passed to a {@link ConfirmationService} to
+ * send it to the recipient.
+ *
+ * <p>Plugins can create their own request classes which implement this
+ * interface or alternatively extend the {@link AbstractRequest} class.</p>
  */
 public interface Request
 {
-	/**
-	 * Gets the message that will be sent to the recipient when the request is sent.
-	 * 
-	 * <p>Supports multi-line messages with {@code \n}.</p>
-	 * 
-	 * @return A message
-	 */
-	Text getMessage();
+    /**
+     * Gets the message that will be sent to the recipient when the request is
+     * sent.
+     * 
+     * <p>Supports multi-line messages with {@code \n}.</p>
+     * 
+     * @return A message
+     */
+    Text getMessage();
 
-	/**
-	 * The method that will be executed when the recipient confirms the request.
-	 * 
-	 * @param source The recipient of the request
-	 */
-	void confirm(CommandSource source);
+    /**
+     * The method that will be executed when the recipient confirms the request.
+     * 
+     * @param source The recipient of the request
+     */
+    void confirm(CommandSource source);
 
-	/**
-	 * The method that will be executed when the recipient denies the request.
-	 * 
-	 * @param source The recipient of the request
-	 */
-	void deny(CommandSource source);
+    /**
+     * The method that will be executed when the recipient denies the request.
+     * 
+     * @param source The recipient of the request
+     */
+    void deny(CommandSource source);
 }
