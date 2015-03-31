@@ -47,11 +47,15 @@ public interface Request
 
 	/**
 	 * The method that will be executed when the recipient confirms the request.
+	 * 
+	 * @param source The recipient of the request
 	 */
 	void confirm(CommandSource source);
 
 	/**
 	 * The method that will be executed when the recipient denies the request.
+	 * 
+	 * @param source The recipient of the request
 	 */
 	void deny(CommandSource source);
 }
