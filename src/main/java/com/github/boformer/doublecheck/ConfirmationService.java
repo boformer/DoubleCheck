@@ -22,8 +22,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.github.boformer.doublecheck;
+
+import org.spongepowered.api.util.command.CommandSource;
+
+import com.google.common.base.Optional;
 
 /**
- * Contains the implementation of the {@code ConfirmationService} and the plugin classes
+ * The Service that can be used by other plugins to send confirmation requests to a player or the
+ * console. 
+ * 
+ * <p>The provider of the service can be obtained from the Sponge {@code ServiceManager}</p>
  */
-package com.github.boformer.doublecheck.impl;
+public interface ConfirmationService
+{
+	/**
+	 * Sends a new request to the specified recipient.
+	 * 
+	 * @param recipient The recipient
+	 * @param request The request
+	 */
+	void send(CommandSource recipient, Request request);
+	
+	/**
+	 * Gets the active request of a recipient, if there is one that is not expired.
+	 * 
+	 * @param recipient The recipient
+	 * @return The request, if available
+	 */
+	Optional<Request> getActiveRequest(CommandSource recipient);
+
+	/**
+	 * Removes the active request of a recipient.
+	 * 
+	 * @param recipient The recipient
+	 */
+	void removeActiveRequest(CommandSource recipient);
+}

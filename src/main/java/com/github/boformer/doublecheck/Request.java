@@ -22,9 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.boformer.doublecheck.api;
+package com.github.boformer.doublecheck;
 
-import org.spongepowered.api.text.message.Message;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.command.CommandSource;
 
 /**
@@ -37,35 +37,21 @@ import org.spongepowered.api.util.command.CommandSource;
 public interface Request
 {
 	/**
-	 * Gets the recipient of the request.
-	 * 
-	 * @return The receipient
-	 */
-	CommandSource getRecipient();
-
-	/**
 	 * Gets the message that will be sent to the recipient when the request is sent.
 	 * 
 	 * <p>Supports multi-line messages with {@code \n}.</p>
 	 * 
 	 * @return A message
 	 */
-	Message getMessage();
+	Text getMessage();
 
 	/**
-	 * Indicates whether the request is expired.
-	 * 
-	 * @return true if the request is expired
+	 * The method that will be executed when the recipient confirms the request.
 	 */
-	boolean isExpired();
+	void confirm(CommandSource source);
 
 	/**
-	 * The method that will be executed when the player confirms the request.
+	 * The method that will be executed when the recipient denies the request.
 	 */
-	void confirm();
-
-	/**
-	 * The method that will be executed when the player denies the request.
-	 */
-	void deny();
+	void deny(CommandSource source);
 }

@@ -1,6 +1,6 @@
 <body>
 <p>
-DoubleCheck, the action confirmation plugin.
+DoubleCheck, the action confirmation library for Sponge
 </p>
 <p>
 There are many commands and actions that should be confirmed before the 
@@ -9,93 +9,80 @@ ban command, or when a player is about to enter a PvP world.
 </p>
 <p>
 Every plugin has it's own command for this. The results are 
-long command names and name conflicts.
+long command names and name conflicts. It is also a lot of work to write the code for the confirmation command.
 </p>
 <p>
-DoubleCheck solves the problem with a unified action 
-confirmation service. Plugins can easily use this service 
-to send confirmation requests like this:
+DoubleCheck solves the problem: The DoubleCheck confirmation service listens for the command, but does not block it permanently for other plugins or other instances of DoubleCheck.
 </p>
+<p>
+This is a typical request that was sent using DoubleCheck:
 <pre><code>
 Are you sure that you want to send 2.000.000.000$ to Notch?
-Please /confirm or /deny this action.
+You have 15 seconds to /confirm or /deny the action.
 </code></pre>
 <p>
 To create a custom request, a class that extends the 
-{@link com.github.boformer.doublecheck.api.Request Request} interface is required.
+{@link com.github.boformer.doublecheck.Request Request} interface is required.
 </p>
 <p>
-<p>It is recommended to extend the 
-{@link com.github.boformer.doublecheck.api.AbstractRequest AbstractRequest} 
-class which implements the interface and provides some basic features:</b></b>
-</p>
 <pre><code>
 package example.request;
 
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.text.message.Message;
-import org.spongepowered.api.text.message.Messages;
-import com.github.boformer.doublecheck.api.AbstractRequest;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.command.CommandSource;
 
-public class TeleportRequest extends AbstractRequest
+import com.github.boformer.doublecheck.Request;
+
+public class TeleportRequest implements Request
 {
 	private final Player fromPlayer;
-	private final Player toPlayer;
 	
-	public TeleportRequest(Player fromPlayer, Player toPlayer, int expirationTime) 
+	public TeleportRequest(Player fromPlayer) 
 	{
-		super(toPlayer, expirationTime);
-		
 		this.fromPlayer = fromPlayer;
-		this.toPlayer = toPlayer;
 	}
 
-	&#064;Override
-	public Message[] getMessages() 
+	@Override
+	public Text getMessage() 
 	{
-		return new Message[] {Messages.of(fromPlayer.getName() + " requested a teleport to you.")};
+		return Texts.of(fromPlayer.getName() + " requested a teleport to you.");
 	}
 
-	&#064;Override
-	public void confirm() 
+	@Override
+	public void confirm(CommandSource recipient) 
 	{
-		fromPlayer.sendMessage("Teleporting...");
-		fromPlayer.setLocation(toPlayer.getLocation());
+		recipient.sendMessage( Texts.of("You confirmed the teleport request") );
+		
+		fromPlayer.sendMessage( Texts.of("Teleporting...") );
+		fromPlayer.setLocation( ((Player) recipient).getLocation() );
 	}
 
-	&#064;Override
-	public void deny() 
+	@Override
+	public void deny(CommandSource recipient) 
 	{
-		fromPlayer.sendMessage("Teleport request denied by " + toPlayer.getName() + "!");
+		recipient.sendMessage( Texts.of("You denied the teleport request") );
+		
+		fromPlayer.sendMessage( Texts.of("Teleport request denied by " + recipient.getName() + "!") );
 	}
 }
 </code></pre>
 <p>
-Plugins can send requests using the 
-{@link com.github.boformer.doublecheck.api.ConfirmationService ConfirmationService}. 
-The service can be obtained from the Sponge {@code ServiceManager}:
+To send a request, the plugin has to initialize a new instance of the {@link com.github.boformer.doublecheck.ConfirmationService ConfirmationService}:
 </p>
 <pre><code>
-ConfirmationService service = game.getServiceManager().provide(ConfirmationService.class).orNull();
+ConfirmationService service = DoubleCheck.initializeService(game, plugin);
 
-Request myRequest = new TeleportRequest(fromPlayer, toPlayer, 30 /*seconds*/)
+Request myRequest = new TeleportRequest(notchPlayer, jebPlayer)
     
-if(service != null) service.send(myRequest);
-else myRequest.confirm(); //just skips confirmation if DoubleCheck not installed
+service.send(jebPlayer, myRequest);
 </code></pre>
-<p><b>
-Warning: There is no guarantee that DoubleCheck is installed on a 
-server and the confirmation service is provided! 
-</b></p>
 <p>
-In case that the service can not be obtained, it is recommended to 
-bypass the confirmation (see example above) or disable certain features. 
-</p>
-<p>
-To make sure that DoubleCheck registers the service before another plugin tries 
-to obtain it, it should be declared as a soft dependency:
+This will send the following request to Jeb:
 </p>
 <pre><code>
-&#064;Plugin(id = "MyPlugin", name = "MyPlugin", dependencies = "after:DoubleCheck")
+Notch requested a teleport to you.
+You have 15 seconds to /confirm or /deny the action.
 </code></pre>
 </body>
