@@ -12,7 +12,7 @@ Latest version | 0.2.0-SNAPSHOT
 
 ### Gradle
 This is a minimal plugin build script (``build.gradle``) that adds the SpongeAPI and DoubleCheck dependencies:
-```
+```gradle
 apply plugin: 'java'
 
 repositories {
