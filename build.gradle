@@ -22,6 +22,7 @@ ext.inceptionYear = '2015'
 version = '0.2.0-SNAPSHOT'
 
 group = 'com.github.boformer'
+archivesBaseName = 'doublecheck'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -92,7 +93,7 @@ uploadArchives {
 			}
 			pom {
 				groupId = project.group
-				artifactId = project.name
+				artifactId = project.archivesBaseName
 				version = project.version
 			}
 		}
