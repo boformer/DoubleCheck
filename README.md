@@ -1,2 +1,2 @@
 # DoubleCheck
-Unified Action Confirmation for Sponge Minecraft Multiplayer Servers
+Action Confirmation Library for Sponge Plugins
