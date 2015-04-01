@@ -5,10 +5,13 @@ Action Confirmation Library for Sponge Plugins
 
 The DoubleCheck artifacts can be found in my Maven repository:
 
-URL | http://homepage.rub.de/Felix.Schmidt-c2n/maven/
-Group | com.github.boformer
-ArtifactId | doublecheck
-Latest version | 0.2.0-SNAPSHOT
+**Repo URL:** http://homepage.rub.de/Felix.Schmidt-c2n/maven/
+
+**GroupId:** com.github.boformer
+
+**ArtifactId:** doublecheck         
+
+**Latest version:** 0.2.0-SNAPSHOT
 
 ### Gradle
 This is a minimal plugin build script (``build.gradle``) that adds the SpongeAPI and DoubleCheck dependencies:
@@ -35,7 +38,7 @@ configurations {
 
 dependencies {
 	provided 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
-	runtime 'com.github.boformer:doublecheck:0.2.0-SNAPSHOT'
+	compile 'com.github.boformer:doublecheck:0.2.0-SNAPSHOT'
 }
 
 // Will include the runtime dependencies in your plugin jar
