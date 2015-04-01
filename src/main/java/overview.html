@@ -44,13 +44,13 @@ public class TeleportRequest implements Request
 		this.fromPlayer = fromPlayer;
 	}
 
-	@Override
+	&#064;Override
 	public Text getMessage() 
 	{
 		return Texts.of(fromPlayer.getName() + " requested a teleport to you.");
 	}
 
-	@Override
+	&#064;Override
 	public void confirm(CommandSource recipient) 
 	{
 		recipient.sendMessage( Texts.of("You confirmed the teleport request") );
@@ -59,7 +59,7 @@ public class TeleportRequest implements Request
 		fromPlayer.setLocation( ((Player) recipient).getLocation() );
 	}
 
-	@Override
+	&#064;Override
 	public void deny(CommandSource recipient) 
 	{
 		recipient.sendMessage( Texts.of("You denied the teleport request") );
