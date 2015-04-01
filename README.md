@@ -41,7 +41,7 @@ dependencies {
 	compile 'com.github.boformer:doublecheck:0.2.0-SNAPSHOT'
 }
 
-// Will include the runtime dependencies in your plugin jar
+// Will include the 'compile' dependencies in your plugin jar
 jar {
 	dependsOn configurations.runtime
 	from {
