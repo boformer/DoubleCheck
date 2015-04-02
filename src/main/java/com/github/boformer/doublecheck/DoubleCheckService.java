@@ -37,7 +37,7 @@ import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-class DoubleCheckService implements ConfirmationService
+public class DoubleCheckService implements ConfirmationService
 {
     private final Cache<CommandSource, Request> requestCache;
 
@@ -65,7 +65,7 @@ class DoubleCheckService implements ConfirmationService
         requestCache.put(recipient, request);
         recipient.sendMessage(request.getMessage(), requestMessage);
 
-        // Occupy the commands
+        // Occupy the commands (Other DoubleCheck instances will listen for the event)
         game.getEventManager().post(new CommandOccupationEvent(this, recipient, confirmAlias));
         game.getEventManager().post(new CommandOccupationEvent(this, recipient, denyAlias));
     }
@@ -96,6 +96,9 @@ class DoubleCheckService implements ConfirmationService
                 event.setCancelled(true);
                 if (confirm) request.confirm(event.getSource());
                 else request.deny(event.getSource());
+                
+                // Remove the request from cache
+                requestCache.invalidate(event.getSource());
             }
         }
     }

@@ -27,7 +27,7 @@ package com.github.boformer.doublecheck;
 import org.spongepowered.api.event.AbstractEvent;
 import org.spongepowered.api.util.command.CommandSource;
 
-class CommandOccupationEvent extends AbstractEvent
+public class CommandOccupationEvent extends AbstractEvent
 {
     private final DoubleCheckService service;
 	private final CommandSource source;
