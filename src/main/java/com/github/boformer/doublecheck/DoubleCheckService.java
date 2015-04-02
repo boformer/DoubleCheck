@@ -30,6 +30,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.event.message.CommandEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.event.Order;
 import org.spongepowered.api.util.event.Subscribe;
 
 import com.google.common.base.Optional;
@@ -81,7 +82,7 @@ class DoubleCheckService implements ConfirmationService
         requestCache.invalidate(recipient);
     }
 
-    @Subscribe
+    @Subscribe(order = Order.EARLY)
     public void onCommand(CommandEvent event)
     {
         boolean confirm = event.getCommand().equalsIgnoreCase(confirmAlias);
