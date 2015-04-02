@@ -37,6 +37,11 @@ import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+/**
+ * The default implementation of {@link ConfirmationService}.
+ * 
+ * <p>Use {@link DoubleCheck#initializeService(Game, Object)} to get an instance of the service.</p>
+ */
 public class DoubleCheckService implements ConfirmationService
 {
     private final Cache<CommandSource, Request> requestCache;
@@ -46,7 +51,6 @@ public class DoubleCheckService implements ConfirmationService
     private final Text requestMessage;
     private final String confirmAlias;
     private final String denyAlias;
-
 
     DoubleCheckService(Game game, Text requestMessage, String confirmAlias, String denyAlias, int expirationTime)
     {

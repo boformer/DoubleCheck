@@ -27,13 +27,16 @@ package com.github.boformer.doublecheck;
 import org.spongepowered.api.event.AbstractEvent;
 import org.spongepowered.api.util.command.CommandSource;
 
+/**
+ * Internal event that is used to temporarily occupy the confirm/deny command
+ */
 public class CommandOccupationEvent extends AbstractEvent
 {
     private final DoubleCheckService service;
 	private final CommandSource source;
     private final String command;
 
-    public CommandOccupationEvent(DoubleCheckService service, CommandSource source, String command)
+    CommandOccupationEvent(DoubleCheckService service, CommandSource source, String command)
     {
         this.service = service;
         this.source = source;
