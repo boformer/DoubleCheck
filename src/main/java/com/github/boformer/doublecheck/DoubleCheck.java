@@ -31,6 +31,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
+/**
+ * A static class that generates new {@link ConfirmationService} instances.
+ */
 public class DoubleCheck
 {
     /**
