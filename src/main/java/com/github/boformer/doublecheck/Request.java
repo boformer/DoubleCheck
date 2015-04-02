@@ -32,7 +32,7 @@ import org.spongepowered.api.util.command.CommandSource;
  * send it to the recipient.
  *
  * <p>Plugins can create their own request classes which implement this
- * interface or alternatively extend the {@link AbstractRequest} class.</p>
+ * interface.</p>
  */
 public interface Request
 {
