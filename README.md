@@ -11,7 +11,7 @@ The DoubleCheck artifacts can be found in my Maven repository:
 
 **ArtifactId:** doublecheck         
 
-**Latest version:** 0.2.0-SNAPSHOT
+**Latest version:** 0.2.1-SNAPSHOT
 
 ### Gradle
 This is a minimal plugin build script (``build.gradle``) that adds the SpongeAPI and DoubleCheck dependencies:
@@ -38,7 +38,7 @@ configurations {
 
 dependencies {
 	provided 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
-	compile 'com.github.boformer:doublecheck:0.2.0-SNAPSHOT'
+	compile 'com.github.boformer:doublecheck:0.2.1-SNAPSHOT'
 }
 
 // Will include the 'compile' dependencies in your plugin jar
