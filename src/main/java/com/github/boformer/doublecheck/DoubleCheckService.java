@@ -82,7 +82,7 @@ class DoubleCheckService implements ConfirmationService
         requestCache.invalidate(recipient);
     }
 
-    @Subscribe(order = Order.EARLY)
+    @Subscribe(order = Order.LATE)
     public void onCommand(CommandEvent event)
     {
         boolean confirm = event.getCommand().equalsIgnoreCase(confirmAlias);
