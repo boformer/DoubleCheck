@@ -1,6 +1,9 @@
 # DoubleCheck
 Action Confirmation Library for Sponge Plugins
 
+* [Javadocs](http://homepage.rub.de/Felix.Schmidt-c2n/javadocs/doublecheck/)
+
+
 ## Usage
 
 The DoubleCheck artifacts can be found in my Maven repository:
