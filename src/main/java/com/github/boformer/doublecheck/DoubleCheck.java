@@ -113,4 +113,6 @@ public class DoubleCheck
 
         return service;
     }
+    
+    private DoubleCheck() {}
 }
