@@ -76,6 +76,12 @@ public class DoubleCheck
     /**
      * Initializes a new {@link ConfirmationService} with the specified
      * parameters.
+     * 
+     * <p>Example:</p>
+     * 
+     * <pre><code>
+     * initializeService(game, plugin, Texts.of("Confirm with /yes or cancel with /no"), "yes", "no", 10 &#47;* seconds *&#47;);
+     * </code></pre>
      *
      * <p>Only use this if the default message and aliases are not suitable.
      * Otherwise, use the recommended
