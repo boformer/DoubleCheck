@@ -66,8 +66,8 @@ class DoubleCheckService implements ConfirmationService
         recipient.sendMessage(request.getMessage(), requestMessage);
 
         // Occupy the commands
-        game.getEventManager().post(new CommandOccupationEvent(recipient, confirmAlias));
-        game.getEventManager().post(new CommandOccupationEvent(recipient, denyAlias));
+        game.getEventManager().post(new CommandOccupationEvent(this, recipient, confirmAlias));
+        game.getEventManager().post(new CommandOccupationEvent(this, recipient, denyAlias));
     }
 
     @Override
@@ -103,7 +103,9 @@ class DoubleCheckService implements ConfirmationService
     @Subscribe
     public void onCommandOccupation(CommandOccupationEvent event)
     {
-        if (event.getCommand().equalsIgnoreCase(confirmAlias) || event.getCommand().equalsIgnoreCase(denyAlias)) requestCache.invalidate(event
+        if (event.getService() == this) return;
+        
+    	if (event.getCommand().equalsIgnoreCase(confirmAlias) || event.getCommand().equalsIgnoreCase(denyAlias)) requestCache.invalidate(event
                 .getSource());
     }
 }

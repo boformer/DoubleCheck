@@ -29,17 +29,23 @@ import org.spongepowered.api.util.command.CommandSource;
 
 class CommandOccupationEvent extends AbstractEvent
 {
-    private final CommandSource source;
+    private final DoubleCheckService service;
+	private final CommandSource source;
     private final String command;
 
-    public CommandOccupationEvent(CommandSource source, String command)
+    public CommandOccupationEvent(DoubleCheckService service, CommandSource source, String command)
     {
-        super();
+        this.service = service;
         this.source = source;
         this.command = command;
     }
+    
+    public DoubleCheckService getService() 
+    {
+		return service;
+	}
 
-    public CommandSource getSource()
+	public CommandSource getSource()
     {
         return source;
     }
