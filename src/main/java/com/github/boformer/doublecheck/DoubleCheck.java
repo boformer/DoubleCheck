@@ -92,9 +92,13 @@ public class DoubleCheck
     public static ConfirmationService initializeService(Game game, Object plugin, Text requestMessage, String confirmAlias, String denyAlias,
             int expirationTime)
     {
-        checkNotNull(game);
-        checkNotNull(plugin);
-
+        checkNotNull(game, "game");
+        checkNotNull(plugin, "plugin");
+        checkNotNull(requestMessage, "requestMessage");
+        checkNotNull(confirmAlias, "confirmAlias");
+        checkNotNull(denyAlias, "denyAlias");
+        checkNotNull(expirationTime, "expirationTime");
+        
         ConfirmationService service = new DoubleCheckService(game, requestMessage, confirmAlias, denyAlias, expirationTime);
         game.getEventManager().register(plugin, service);
 
