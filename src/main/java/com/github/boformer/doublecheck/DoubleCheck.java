@@ -26,20 +26,10 @@ package com.github.boformer.doublecheck;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.concurrent.TimeUnit;
-
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.AbstractEvent;
-import org.spongepowered.api.event.message.CommandEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.event.Subscribe;
-
-import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 public class DoubleCheck
 {

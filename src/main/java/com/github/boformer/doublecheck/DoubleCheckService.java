@@ -27,7 +27,6 @@ package com.github.boformer.doublecheck;
 import java.util.concurrent.TimeUnit;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.AbstractEvent;
 import org.spongepowered.api.event.message.CommandEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.command.CommandSource;
