@@ -14,7 +14,7 @@ The DoubleCheck artifacts can be found in my Maven repository:
 
 **ArtifactId:** doublecheck         
 
-**Latest version:** 1.0.0
+**Latest version:** 1.0.1 (for SpongeAPI 2.0)
 
 ### Gradle
 This is a minimal plugin build script (``build.gradle``) that adds the SpongeAPI and DoubleCheck dependencies:
@@ -40,8 +40,8 @@ configurations {
 }
 
 dependencies {
-	provided 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
-	compile 'com.github.boformer:doublecheck:1.0.0'
+	provided 'org.spongepowered:spongeapi:2.0'
+	compile 'com.github.boformer:doublecheck:1.0.1'
 }
 
 // Will include the 'compile' dependencies in your plugin jar
@@ -57,18 +57,18 @@ jar {
 
 ## Example
 ```java
-import java.util.Collections;
-import java.util.List;
-
 import org.spongepowered.api.Game;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.util.command.args.CommandContext;
+import org.spongepowered.api.util.command.spec.CommandExecutor;
+import org.spongepowered.api.util.command.spec.CommandSpec;
 
 import com.github.boformer.doublecheck.ConfirmationService;
 import com.github.boformer.doublecheck.DoubleCheck;
@@ -78,10 +78,8 @@ import com.google.inject.Inject;
 @Plugin(id = "spongetest", name = "SpongeTest", version = "0.1.0")
 public class SpongeTestPlugin {
 
-    @Inject
-    private Game game;
+    @Inject private Game game;
     
-    // The DoubleCheck service class
     private ConfirmationService service;
 
     @Subscribe
@@ -90,38 +88,19 @@ public class SpongeTestPlugin {
         // Get a new service instance
         service = DoubleCheck.initializeService(game, this);
         
-        game.getCommandDispatcher().register(this, new ExampleCommand(), "test");
-    }
+        game.getCommandDispatcher().register(this, 
+                CommandSpec.builder()
+                .setDescription(Texts.of("Test Command"))
+                .setExecutor(new CommandExecutor() {
+                    @Override
+                    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
-    private class ExampleCommand implements CommandCallable {
+                        src.sendMessage(Texts.of("Sending you a request..."));
+                        service.send(src, new ExampleRequest());
+                        return CommandResult.empty();
 
-        @Override
-        public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
-            source.sendMessage(Texts.of("Sending you a request..."));
-            service.send(source, new ExampleRequest());
-            return true;
-        }
-        @Override
-        public boolean testPermission(CommandSource source) {
-            return true;
-        }
-        @Override
-        public String getShortDescription(CommandSource source) {
-            return "Test Command";
-        }
-        @Override
-        public Text getHelp(CommandSource source) {
-            return Texts.of("Test Command.");
-        }
-        @Override
-        public String getUsage(CommandSource source) {
-            return "";
-        }
-        @Override
-        public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-            return Collections.emptyList();
-        }
-
+                    }})
+                .build(), "test");
     }
     
     private class ExampleRequest implements Request {
@@ -140,6 +119,5 @@ public class SpongeTestPlugin {
         }
         
     }
-    
 }
 ```

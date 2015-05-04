@@ -30,8 +30,8 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.event.message.CommandEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.event.Order;
-import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.Subscribe;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
