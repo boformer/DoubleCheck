@@ -19,7 +19,7 @@ ext.author = 'Felix Schmidt'
 ext.authorUrl = 'http://homepage.rub.de/Felix.Schmidt-c2n/'
 ext.inceptionYear = '2015'
 
-version = '1.0.1'
+version = '1.0.2'
 
 group = 'com.github.boformer'
 archivesBaseName = 'doublecheck'

@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.message.CommandEvent;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.Subscribe;
@@ -98,6 +99,8 @@ public class DoubleCheckService implements ConfirmationService
             if (request != null)
             {
                 event.setCancelled(true);
+                event.setResult(CommandResult.empty());
+                
                 if (confirm) request.confirm(event.getSource());
                 else request.deny(event.getSource());
                 
