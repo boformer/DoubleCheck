@@ -24,41 +24,45 @@
  */
 package com.github.boformer.doublecheck;
 
+import org.spongepowered.api.Game;
 import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.args.CommandContext;
 
-import com.google.common.base.Optional;
+import java.util.Collection;
 
 /**
  * The Service that can be used by other plugins to send confirmation requests
  * to a player or the console.
  *
- * <p>The provider of the service can be obtained with the static
- * {@link DoubleCheck#initializeService(org.spongepowered.api.Game, Object)}
- * method.</p>
+ * <p>Use {@link DoubleCheck#initializeService(Game)} to initialize the service
+ * in the {@code PRE_INITIALIZATION} game state.</p>
+ *
+ * <p>Use {@link DoubleCheck#initializeService(Game)} to get the service in the
+ * {@code POST_INITIALIZATION} game state.</p>
  */
 public interface ConfirmationService
 {
+
     /**
      * Sends a new request to the specified recipient.
-     * 
-     * @param recipient The recipient
+     *
      * @param request The request
+     * @param recipient The recipient
+     * @param args The arguments
      */
-    void send(CommandSource recipient, Request request);
+    void send(Request request, CommandSource recipient, CommandContext args);
 
     /**
-     * Gets the active request of a recipient, if there is one that is not
-     * expired.
-     * 
-     * @param recipient The recipient
-     * @return The request, if available
+     * Gets all active requests. The returned collection is mutable.
+     *
+     * @return A collection of requests
      */
-    Optional<Request> getActiveRequest(CommandSource recipient);
+    Collection<RequestData> getActiveRequests();
 
     /**
-     * Removes the active request of a recipient.
-     * 
-     * @param recipient The recipient
+     * Get the version of the service.
+     *
+     * @return The service version
      */
-    void removeActiveRequest(CommandSource recipient);
+    String getVersion();
 }

@@ -27,91 +27,46 @@ package com.github.boformer.doublecheck;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
 
 /**
- * A static class that generates new {@link ConfirmationService} instances.
+ * A static class that initializes the {@link ConfirmationService} instance.
  */
 public class DoubleCheck
 {
-    /**
-     * The default message that is displayed after when a request is sent:
-     *
-     * <p>{@code "You have 15 seconds to /confirm or /deny the action."}</p>
-     */
-    //TODO translations
-    public final static Text REQUEST_MESSAGE = Texts.of(TextColors.GOLD, "You have 15 seconds to ", TextColors.RED, "/confirm", TextColors.GOLD,
-            " or ", TextColors.RED, "/deny", TextColors.GOLD, " the action.");
+    private static final String CONFIRM_ALIAS = "confirm";
+    private static final String DENY_ALIAS = "deny";
+    private static final int EXPIRATION_TIME = 15;
 
     /**
-     * The default alias of the confirm command ({@code "confirm"}).
-     */
-    public final static String CONFIRM_ALIAS = "confirm";
-
-    /**
-     * The default alias of the deny command ({@code "deny"}).
-     */
-    public final static String DENY_ALIAS = "deny";
-
-    /**
-     * The default expiration time of a request (15 seconds).
-     */
-    public final static int EXPIRATION_TIME = 15;
-
-
-    /**
-     * Initializes a new {@link ConfirmationService} with the default
-     * parameters.
-     *
-     * <p>This is the recommended way to create the service.</p>
+     * Initializes the {@link ConfirmationService}. This method must be called 
+     * in the {@code PRE_INITIALIZATION} game state.
      *
      * @param game The game
-     * @param plugin The plugin instance
-     * @return The service
      */
-    public static ConfirmationService initializeService(Game game, Object plugin)
+    public static void initializeService(Game game)
     {
-        return initializeService(game, plugin, REQUEST_MESSAGE, CONFIRM_ALIAS, DENY_ALIAS, EXPIRATION_TIME);
+        checkNotNull(game, "game");
+        
+        ConfirmationService service = new ConfirmationServiceImpl(CONFIRM_ALIAS, DENY_ALIAS, EXPIRATION_TIME);
+        
+        game.getEventManager().register(service, service);
     }
 
     /**
-     * Initializes a new {@link ConfirmationService} with the specified
-     * parameters.
+     * Gets the {@link ConfirmationService} from the service manager. 
      * 
-     * <p>Example:</p>
+     * Do not call this method before the {@code POST_INITIALIZATION} game state.
      * 
-     * <pre><code>
-     * initializeService(game, plugin, Texts.of("Confirm with /yes or cancel with /no"), "yes", "no", 10 &#47;* seconds *&#47;);
-     * </code></pre>
-     *
-     * <p>Only use this if the default message and aliases are not suitable.
-     * Otherwise, use the recommended
-     * {@link DoubleCheck#initializeService(Game, Object)} method.</p>
-     *
-     * @param game The game
-     * @param plugin The plugin instance
-     * @param requestMessage The request message
-     * @param confirmAlias The confirm command alias
-     * @param denyAlias The deny command alias
-     * @param expirationTime The expiration time in seconds
-     * @return The service
+     * <p>This method throws an exception if the service was not registered with 
+     * {@link DoubleCheck#initializeService(Game)}</p>
+     * @param game
+     * @return
      */
-    public static ConfirmationService initializeService(Game game, Object plugin, Text requestMessage, String confirmAlias, String denyAlias,
-            int expirationTime)
+    public static ConfirmationService getService(Game game)
     {
         checkNotNull(game, "game");
-        checkNotNull(plugin, "plugin");
-        checkNotNull(requestMessage, "requestMessage");
-        checkNotNull(confirmAlias, "confirmAlias");
-        checkNotNull(denyAlias, "denyAlias");
-        checkNotNull(expirationTime, "expirationTime");
         
-        ConfirmationService service = new DoubleCheckService(game, requestMessage, confirmAlias, denyAlias, expirationTime);
-        game.getEventManager().register(plugin, service);
-
-        return service;
+        return game.getServiceManager().provideUnchecked(ConfirmationService.class);
     }
     
     private DoubleCheck() {}
