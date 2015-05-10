@@ -24,47 +24,50 @@
  */
 package com.github.boformer.doublecheck;
 
-import java.util.Collection;
-
-import com.google.common.base.Optional;
-import org.spongepowered.api.Game;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
 
 /**
- * The Service that can be used by other plugins to send confirmation requests
- * to a player or the console.
- *
- * <p>Use {@link DoubleCheck#initializeService(Game)} to initialize the service
- * in the {@code PRE_INITIALIZATION} game state.</p>
- *
- * <p>Use {@link DoubleCheck#initializeService(Game)} to get the service in the
- * {@code POST_INITIALIZATION} game state.</p>
+ * Stores the command logic of the request that will be executed when the
+ * request is sent, confirmed, denied or when the request expired.
  */
-public interface ConfirmationService
-{
+public interface RequestExecutor {
 
     /**
-     * Sends a new request to the specified recipient.
+     * Executed when the request is being sent.
      *
-     * @param requestExecutor The request executor
-     * @param recipient The recipient
-     * @param args The arguments
-     * @return The request, if no exception occurred
+     * @return A command executor
+     * @throws CommandException If a user-facing error occurs while executing
+     *         this command
      */
-    Optional<Request> send(RequestExecutor requestExecutor, CommandSource recipient, CommandContext args);
+    CommandResult request(CommandSource src, CommandContext args) throws CommandException;
 
     /**
-     * Gets all active requests. The returned collection is mutable.
+     * Executed when the recipient confirms the request.
      *
-     * @return A collection of requests
+     * @return A command result
+     * @throws CommandException If a user-facing error occurs while executing
+     *         this command
      */
-    Collection<Request> getActiveRequests();
+    CommandResult confirm(CommandSource src, CommandContext args) throws CommandException;
 
     /**
-     * Get the version of the service.
+     * Executed when the recipient denies the request.
      *
-     * @return The service version
+     * @return A command result
+     * @throws CommandException If a user-facing error occurs while executing
+     *         this command
      */
-    String getVersion();
+    CommandResult deny(CommandSource src, CommandContext args) throws CommandException;
+
+    /**
+     * Executed when the request expires.
+     *
+     * @return A command result
+     * @throws CommandException If a user-facing error occurs while executing
+     *         this command
+     */
+    CommandResult expire(CommandSource src, CommandContext args) throws CommandException;
 }

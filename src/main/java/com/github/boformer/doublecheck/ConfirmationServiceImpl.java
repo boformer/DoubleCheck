@@ -46,7 +46,6 @@ import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
-import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -84,9 +83,9 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
     private final String confirmAlias;
     private final String denyAlias;
 
-    private final Cache<CommandSource, RequestData> activeRequestByRecipient;
+    private final Cache<CommandSource, Request> activeRequestByRecipient;
 
-    private final Cache<UUID, RequestData> activeRequestById;
+    private final Cache<UUID, Request> activeRequestById;
 
     ConfirmationServiceImpl(String confirmAlias, String denyAlias, int expirationTime)
     {
@@ -94,24 +93,19 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
         this.activeRequestById = CacheBuilder.newBuilder()
                 .initialCapacity(4)
                 .expireAfterWrite(expirationTime, TimeUnit.SECONDS)
-                .removalListener(new RemovalListener<UUID, RequestData>() {
+                .removalListener(new RemovalListener<UUID, Request>() {
 
                     @Override
-                    public void onRemoval(RemovalNotification<UUID, RequestData> notification) {
-                        RequestData data = notification.getValue();
+                    public void onRemoval(RemovalNotification<UUID, Request> notification) {
+                        Request data = notification.getValue();
 
                         if (notification.getCause() == RemovalCause.EXPIRED)
                         {
-                            CommandExecutor executor = data.getRequest().getExpirationExecutor();
-
-                            if (executor != null) {
-                                try {
-                                    executor.execute(data.getRecipient(), data.getArguments());
-                                } catch (CommandException e) {
-                                }
-                            }
+                            try {
+                                data.getExecutor().expire(data.getRecipient(), data.getArguments());
+                            } catch (CommandException e) {}
                         }
-                        else
+                        else // removed by confirm/deny
                         {
                             if (data == ConfirmationServiceImpl.this.activeRequestByRecipient.getIfPresent(data.getRecipient()))
                             {
@@ -125,7 +119,7 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
         this.denyAlias = denyAlias;
     }
 
-    private Text formatMessage(UUID requestId)
+    private Text formatActionMessage(UUID requestId)
     {
         // TODO make this message customizable (config)
         return Texts.of(
@@ -138,7 +132,7 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
     }
 
     @Override
-    public Collection<RequestData> getActiveRequests()
+    public Collection<Request> getActiveRequests()
     {
         return this.activeRequestById.asMap().values();
     }
@@ -167,7 +161,7 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
         return VERSION;
     }
 
-    @Subscribe(order = Order.LAST)
+    @Subscribe(order = Order.LAST) // Last to allow future version to override this implementation
     public void onInitialization(InitializationEvent event)
     {
         this.game = event.getGame();
@@ -178,31 +172,42 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
             return;
         }
 
-        // TODO create a config to edit default values/messages
+        // TODO create a config to edit default values/messages and aliases
 
-        this.game.getCommandDispatcher().register(this, new ConfirmationCommand(true), "confirm");
+        this.game.getCommandDispatcher().register(this, new ConfirmationCommand(false), "confirm");
         this.game.getCommandDispatcher().register(this, new ConfirmationCommand(true), "deny");
     }
 
     @Override
-    public void send(Request request, CommandSource recipient, CommandContext args)
+    public Optional<Request> send(RequestExecutor requestExecutor, CommandSource recipient, CommandContext args)
     {
-        RequestData data = new RequestData(request, recipient, args);
-
+    	Request request = new RequestImpl(requestExecutor, recipient, args);
+    	
+        // find unused request ID
         UUID requestId;
         do {
             requestId = UUID.randomUUID();
         } while (this.activeRequestById.getIfPresent(requestId) != null);
+    	
+        // display request
+        try {
+            requestExecutor.request(recipient, args);
+        } catch (CommandException e) {
+            // cancel the request if a command exception occurs
+            recipient.sendMessage(e.getText());
+            return Optional.absent();
+        }
+        recipient.sendMessage(formatActionMessage(requestId));
+        
+    	// add to cache
+        this.activeRequestByRecipient.put(recipient, request);
+        this.activeRequestById.put(requestId, request);
 
-        this.activeRequestByRecipient.put(recipient, data);
-        this.activeRequestById.put(requestId, data);
-
-        recipient.sendMessage(request.getMessage(), formatMessage(requestId));
+        return Optional.of(request);
     }
 
     private class ConfirmationCommand implements CommandCallable
     {
-
         private final boolean confirm;
 
         private ConfirmationCommand(boolean confirm)
@@ -238,21 +243,17 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
         public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException
         {
             UUID requestId = null;
+            Request request = null;
             try
             {
                 requestId = UUID.fromString(arguments);
+                request = ConfirmationServiceImpl.this.activeRequestById.getIfPresent(requestId);
             } catch (IllegalArgumentException e) {
+                // ignore argument, search for the latest request
+                request = ConfirmationServiceImpl.this.activeRequestByRecipient.getIfPresent(source);
             }
 
-            RequestData data;
-
-            if (requestId != null) {
-                data = ConfirmationServiceImpl.this.activeRequestById.getIfPresent(requestId);
-            } else {
-                data = ConfirmationServiceImpl.this.activeRequestByRecipient.getIfPresent(source);
-            }
-
-            if (data == null)
+            if (request == null)
             {
                 if (requestId != null) {
                     source.sendMessage(NO_REQUEST_EXPIRED_MESSAGE);
@@ -262,14 +263,14 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
 
                 return Optional.of(CommandResult.empty());
             }
-
-            CommandExecutor executor = this.confirm ? data.getRequest().getConfirmExecutor() : data.getRequest().getDenyExecutor();
-
-            if (executor == null) {
-                return Optional.of(CommandResult.empty());
-            }
-
-            return Optional.of(executor.execute(data.getRecipient(), data.getArguments()));
+            
+            // delete the request from cache
+            activeRequestById.asMap().values().remove(request);
+            
+            // execute the confirm/deny command logic
+            RequestExecutor executor = request.getExecutor();
+            if(this.confirm) return Optional.of(executor.confirm(request.getRecipient(), request.getArguments()));
+            else return Optional.of(executor.deny(request.getRecipient(), request.getArguments()));
         }
 
         @Override
@@ -277,5 +278,39 @@ public class ConfirmationServiceImpl implements ConfirmationService, PluginConta
         {
             return true;
         }
+    }
+    
+    private class RequestImpl implements Request
+    {
+
+        private final RequestExecutor request;
+        private final CommandSource recipient;
+        private final CommandContext arguments;
+
+        RequestImpl(RequestExecutor request, CommandSource recipient, CommandContext arguments)
+        {
+            this.request = request;
+            this.recipient = recipient;
+            this.arguments = arguments;
+        }
+
+        @Override
+        public CommandContext getArguments()
+        {
+            return this.arguments;
+        }
+
+        @Override
+        public CommandSource getRecipient()
+        {
+            return this.recipient;
+        }
+
+        @Override
+        public RequestExecutor getExecutor()
+        {
+            return this.request;
+        }
+
     }
 }

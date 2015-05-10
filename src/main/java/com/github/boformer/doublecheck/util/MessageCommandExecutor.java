@@ -22,35 +22,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.boformer.doublecheck;
+package com.github.boformer.doublecheck.util;
 
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
+import org.spongepowered.api.util.command.spec.CommandExecutor;
 
 /**
- * Stores the data of a sent request.
+ * A simple command executor that sends a specified message to the command
+ * sender and returns an empty command result.
  */
-public interface Request {
+public class MessageCommandExecutor implements CommandExecutor {
 
-	/**
-	 * Returns the passed arguments.
-	 *
-	 * @return The arguments
-	 */
-	public abstract CommandContext getArguments();
+    private final Text message;
 
-	/**
-	 * Returns the recipient of the request.
-	 *
-	 * @return The recipient
-	 */
-	public abstract CommandSource getRecipient();
+    /**
+     * Creates a new instance of the executor.
+     *
+     * @param message The message
+     */
+    public MessageCommandExecutor(Text message) {
+        this.message = message;
+    }
 
-	/**
-	 * Returns the request executor object.
-	 *
-	 * @return The request
-	 */
-	public abstract RequestExecutor getExecutor();
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        src.sendMessage(this.message);
+        return CommandResult.empty();
+    }
 
 }
